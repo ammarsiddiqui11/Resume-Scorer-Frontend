@@ -13,7 +13,17 @@ const Admin = () => {
     useEffect(() => {
 
         const fetchAllData = async () => {
-            // please watch the video for full code
+            setLoader(true)
+            try {
+                const result = await axios.get('/api/resume/get')
+                console.log(result.data)
+                setData(result?.data?.resumes)
+            } catch (error) {
+                console.log(error)
+                alert('something went wrong')
+            }finally{
+                setLoader(false)
+            }
         }
 
         fetchAllData()
@@ -47,13 +57,14 @@ const Admin = () => {
                 }
 
                 {
-                    // Please Watch the video for full code
-                    <div className={styles.AdminCard}>
-                        <h2>CodingHunger</h2>
-                        <p style={{ color: "blue" }}>mashhood@gmail.com</p>
-                        <h3>Score: 50%</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia cum ipsam q</p>
+                    data.map((item,index) =>{
+                        <div key={item?._id || index} className={styles.AdminCard}>
+                        <h2>{item?.user.name}</h2>
+                        <p style={{ color: "blue" }}>{item?.user?.email}</p>
+                        <h3>Score: {item?.score}%</h3>
+                        <p>{item?.feedback}</p>
                     </div>
+                    })
                 }
 
 
