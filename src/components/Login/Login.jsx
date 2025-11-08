@@ -15,7 +15,6 @@ const Login = () => {
     const navigate = useNavigate();
     const handleLogin = async () => {
         try {
-            {/* Please watch the video for ful source code */ }
             const result = await signInWithPopup(auth,provider)
             const user = result.user
             const userData = {
@@ -23,13 +22,17 @@ const Login = () => {
                 email:user.email,
                 photoUrl:user.photoURL
             }
+            await axios.post('/api/user',userData).then((response)=>{
+                setUserInfo(response.data.user)
+                console.log(response)
+                localStorage.setItem("userInfo", JSON.stringify(response.data.user))
+            }).catch(err=>{
+                console.log(err)
+            })
 
 
             setLogin(true);
-            setUserInfo(userData)
-
             localStorage.setItem("isLogin", true)
-            localStorage.setItem("userInfo", JSON.stringify(userData))
 
             navigate('/dashboard')
         } catch (err) {

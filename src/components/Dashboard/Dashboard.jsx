@@ -24,10 +24,25 @@ const Dashboard = () => {
     }
 
     const handleUpload = async () => {
-        {/* Please watch the video for ful source code */ }
+        setResult(null)
+        if (!jobDesc || !resumeFile){
+            alert("Please fill Job Description & Upload Resume");
+            return;
+        }
+        const formData = new FormData();
+        formData.append("resume", resumeFile);
+        formData.append("job_desc", jobDesc);
+        formData.append("user", userInfo._id);
+        setLoading(true)
+        try {
+            const result = await axios.post('/api/resume/addResume',formData)
+            setResult(result.data.data)
 
-
-
+        } catch (error) {
+            console.log(error)
+        }finally{
+            setLoading(false)
+        }
     }
 
     return (
@@ -47,16 +62,17 @@ const Dashboard = () => {
 
                 <div className={styles.DashboardUploadResume}>
                     <div className={styles.DashboardResumeBlock}>
-                        Upload Your Resume
+                        {uploadFiletext}
                     </div>
                     <div className={styles.DashboardInputField}>
                         <label htmlFor='inputField' className={styles.analyzeAIBtn}>Upload Resume</label>
-                        <input type='file' accept=".pdf" id='inputField' />
+                        <input type='file' accept=".pdf" id='inputField' onClick={handleOnChangeFile} />
++                       <input type='file' accept=".pdf" id='inputField' onChange={handleOnChangeFile} />
                     </div>
                 </div>
 
                 <div className={styles.jobDesc}>
-                    <textarea value={jobDesc} onChange={(e) => { setJobDesc(e.target.value) }} className={styles.textArea} placeholder='Paste Your Job Description' rows={10} cols={50} />
+                    <textarea value={jobDesc} onChange={(e) => {setJobDesc(e.target.value)}} className={styles.textArea} placeholder='Paste Your Job Description' rows={10} cols={50} />
                     <div className={styles.AnalyzeBtn} onClick={handleUpload} >Analyze</div>
                 </div>
             </div >
@@ -75,13 +91,13 @@ const Dashboard = () => {
                     result && <div className={styles.DashboardRightTopCard}>
                         <div>Result</div>
 
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center",gap:20}}>
-                            <h1>75% </h1>
-                            <CreditScoreIcon sx={{fontSize:22}}/>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20 }}>
+                            <h1>{result?.score}% </h1>
+                            <CreditScoreIcon sx={{ fontSize: 22 }} />
                         </div>
                         <div className={styles.feedback}>
                             <h3>feedback</h3>
-                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum dignissimos vel deleniti eos illum deserunt? Omnis ex repellat rem, veritatis sed distinctio iste exercitationem error iusto atque quidem, quo nostrum.</p>
+                            <p>{result?.feedback}</p>
                         </div>
 
                     </div>
