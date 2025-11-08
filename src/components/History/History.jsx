@@ -16,8 +16,16 @@ const History = () => {
 
     const fetchUserData = async () => {
       setLoader(true)
-      {/* Please watch the video for ful source code */ }
-
+      try {
+        const result = await axios.get(`/api/resume/get/${userInfo?._id}`)
+        console.log(result)
+        setData(result.data.resumes)
+      } catch (error) {
+        console.log(error)
+        alert('something went wrong')
+      }finally{
+        setLoader(false)
+      }
     }
 
     fetchUserData()

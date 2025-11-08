@@ -17,7 +17,10 @@ const SideBar = () => {
     const { isLogin, setLogin, userInfo, setUserInfo } = useContext(AuthContext);
 
     const handleLogout = () => {
-        {/* Please watch the video for ful source code */ }
+        localStorage.clear()
+        setLogin(false)
+        setUserInfo(null)
+        navigate('/')
 
     }
     return (
@@ -41,10 +44,12 @@ const SideBar = () => {
                 </Link>
 
 
-                <Link to={'/admin'} className={[styles.sideBarOption, location.pathname === '/admin' ? styles.selectedOption : null].join(' ')}>
+                {
+                    userInfo?.role==='admin' && <Link to={'/admin'} className={[styles.sideBarOption, location.pathname === '/admin' ? styles.selectedOption : null].join(' ')}>
                     <AdminPanelSettingsIcon sx={{ fontSize: 22 }} />
                     <div>Admin</div>
                 </Link>
+                }
 
 
             <div onClick={handleLogout} className={styles.sideBarOption}>
